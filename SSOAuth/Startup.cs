@@ -94,6 +94,8 @@ namespace SSOAuth
             app.UseStaticFiles();
             app.UseSession();
             app.UseRouting();
+            app.UseHttpMethodOverride();
+            app.UseHttpsRedirection();
 
             app.UseAuthentication();
             app.UseAuthorization();

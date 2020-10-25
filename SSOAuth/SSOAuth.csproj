@@ -27,15 +27,5 @@
       <HintPath>bin\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
-	<httpModules>
-		<add type="[COM+ Class], [Assembly]" name="[ModuleName]" />
-		<remove type="[COM+ Class], [Assembly]" name="[ModuleName]" />
-		<clear />
-	</httpModules>
-	<httpHandlers>
-		<add verb="*" path="*" type="SSOAuth.FacebookLogin" validate="[true/false]" />
-		<remove verb="[verb list]" path="[path/wildcard]" />
-		<clear />
-	</httpHandlers>
 
 </Project>
