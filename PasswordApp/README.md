@@ -1,0 +1,1 @@
+PasswordApp - GUI desktop application that asks an end-user to enter a password which is shipped by the application itself. In case that correct password is entered by the user – he receives a welcome message, otherwise user gets an error message. Application password is delivered to the user using email as out-of-band authentication.
