@@ -22,3 +22,4 @@ Project is created with:
 * Apache server
 ## Setup
 To run this project, clone the repository and open the file in any browse, but make sure to host it on a web server.
+Note: to configure sso integration for an application you must obtain API_KEY/CLIENT_ID/CLIENT_SECRET from the needed identity provider, otherwise you won't be able to use sso authetication.
