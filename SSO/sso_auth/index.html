@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="google-signin-client_id" content="MY_CLIENT_ID.apps.googleusercontent.com">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdn.rawgit.com/oauth-io/oauth-js/c5af4519/dist/oauth.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/4.12.0/bootstrap-social.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/4.12.0/bootstrap-social.min.css">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</script>
+    <style media="screen">
+      #fb-btn{margin-top:20px;}
+      #profile, #logout, #feed{display:none}
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-default">
+       <div class="container">
+         <div class="navbar-header">
+           <a class="navbar-brand" href="#">SSO Auth</a>
+         </div>
+         <div id="navbar" class="collapse navbar-collapse">
+           <ul class="nav navbar-nav">
+             <li><a href="index.html">Home</a></li>
+           </ul>
+           <ul class="nav navbar-nav navbar-right">
+             <a id="github-button" class="btn btn-block btn-social btn-github">
+               <i class="fa fa-github"></i> Sign in with Github
+             </a>
+             <a id="linkedin-button" class="btn btn-block btn-social btn-linkedin" >
+               <i class="fa fa-linkedin"></i> Sign in with Linkedin
+             </a>
+             <a id="twitter-button" class="btn btn-block btn-social btn-twitter">
+               <i class="fa fa-twitter"></i> Sign in with Twitter
+             </a>
+             <li><a id="logout" href="#" onclick="logout()">Logout</a></li>
+             <fb:login-button
+              id="fb-btn"
+              scope="public_profile,email,user_birthday,user_location,user_posts"
+              onlogin="checkLoginState();">
+              <a class="btn btn-block btn-social btn-facebook">
+                <i class="fa fa-facebook"></i> Sign in with Facebook
+              </a>
+            </fb:login-button>
+              <br>
+            <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark">
+            </div>
+            <br>
+
+            <a href="#" onclick="signOut();">Sign out</a>
+           </ul>
+         </div>
+       </div>
+     </nav>
+    <script>
+      function onSignIn(googleUser) {
+       var profile = googleUser.getBasicProfile();
+       let google_profile2 = `
+         <h3>${profile.getName()}</h3>
+         <ul class="list-group">
+           <li class="list-group-item">Given Name: ${profile.getGivenName()}</li>
+           <li class="list-group-item">Family Name: ${profile.getFamilyName()}</li>
+           <li class="list-group-item">ImageUrl: ${profile.getImageUrl()}</li>
+           <li class="list-group-item">Email: ${profile.getEmail()}</li>
+           <li class="list-group-item">ID: ${profile.getId()}</li>
+         </ul>
+       `;
+       document.getElementById('google_profile2').innerHTML = google_profile2;
+       var id_token = googleUser.getAuthResponse().id_token;
+       console.log("ID Token: " + id_token);
+     }
+
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '388514638999741',
+          cookie     : true,
+          xfbml      : true,
+          version    : 'v2.8'
+        });
+        FB.getLoginStatus(function(response) {
+            statusChangeCallback(response);
+        });
+      };
+
+      (function(d, s, id){
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement(s); js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+
+      function statusChangeCallback(response){
+         if(response.status === 'connected'){
+           console.log('Logged in and authenticated');
+           setElements(true);
+           testAPI();
+         } else {
+           console.log('Not authenticated');
+           setElements(false);
+         }
+       }
+
+        function checkLoginState() {
+          FB.getLoginStatus(function(response) {
+            statusChangeCallback(response);
+          });
+        }
+
+        function testAPI(){
+          FB.api('/me?fields=name,email,birthday,location', function(response){
+            if(response && !response.error){
+              //console.log(response);
+              buildProfile(response);
+            }
+
+            FB.api('/me/feed', function(response){
+              if(response && !response.error){
+                buildFeed(response);
+              }
+            });
+          })
+        }
+
+        function buildProfile(user){
+             let profile = `
+               <h3>${user.name}</h3>
+               <ul class="list-group">
+                 <li class="list-group-item">User ID: ${user.id}</li>
+                 <li class="list-group-item">Email: ${user.email}</li>
+                 <li class="list-group-item">Birthday: ${user.birthday}</li>
+                 <li class="list-group-item">Location: ${user.location.name}</li>
+               </ul>
+             `;
+
+             document.getElementById('profile').innerHTML = profile;
+           }
+
+        function buildFeed(feed){
+                let output = '<h3>Latest Posts</h3>';
+                for(let i in feed.data){
+                  if(feed.data[i].message){
+                    output += `
+                      <div class="well">
+                        ${feed.data[i].message} <span>${feed.data[i].created_time}</span>
+                      </div>
+                    `;
+                  }
+                }
+
+                document.getElementById('feed').innerHTML = output;
+              }
+
+        function setElements(isLoggedIn){
+                if(isLoggedIn){
+                  document.getElementById('logout').style.display = 'block';
+                  document.getElementById('profile').style.display = 'block';
+                  document.getElementById('feed').style.display = 'block';
+                  document.getElementById('fb-btn').style.display = 'none';
+                } else {
+                  document.getElementById('logout').style.display = 'none';
+                  document.getElementById('profile').style.display = 'none';
+                  document.getElementById('feed').style.display = 'none';
+                  document.getElementById('fb-btn').style.display = 'block';
+                }
+              }
+
+        function logout(){
+        FB.logout(function(response){
+          setElements(false);
+        });
+      }
+
+        function signOut() {
+          var auth2 = gapi.auth2.getAuthInstance();
+          auth2.signOut().then(function () {
+            auth2.disconnect();
+              document.getElementById('google_profile2').style.display = 'none';
+              document.getElementById('github_info').style.display = 'none';
+              document.getElementById('linkedin_info').style.display = 'none';
+              document.getElementById('twitter_info').style.display = 'none';
+          });
+          location.reload();
+          return false;
+        }
+
+        $('#github-button').on('click', function() {
+            OAuth.initialize('{API_KEY}');
+            OAuth.popup('github').then(github => {
+              console.log('github:', github);
+            github.me().then(data => {
+              console.log('me data:', data);
+              let github_info2 = `
+                <h3>${data.alias}</h3>
+                <ul class="list-group">
+                  <li class="list-group-item">Avatar: ${data.avatar}</li>
+                  <li class="list-group-item">Bio: ${data.bio}</li>
+                  <li class="list-group-item">Company: ${data.company}</li>
+                  <li class="list-group-item">Email: ${data.email}</li>
+                  <li class="list-group-item">ID: ${data.id}</li>
+                  <li class="list-group-item">Location: ${data.location}</li>
+                  <li class="list-group-item">Name: ${data.name}</li>
+                </ul>
+              `;
+              document.getElementById('github_info').innerHTML = github_info2;
+        });
+            github.get('/user').then(data => {
+              console.log('self data:', data);
+            })
+          });
+        })
+
+        $('#linkedin-button').on('click', function() {
+        OAuth.initialize('{API_KEY}');
+        OAuth.popup('linkedin2').then(linkedin => {
+          console.log('linkedin:',linkedin);
+          linkedin.me().then(data => {
+            console.log('me data:', data);
+            let linkedin_info2 = `
+              <h3>${data.name}</h3>
+              <ul class="list-group">
+                <li class="list-group-item">Avatar: ${data.avatar}</li>
+                <li class="list-group-item">Bio: ${data.bio}</li>
+                <li class="list-group-item">Company: ${data.company}</li>
+                <li class="list-group-item">Email: ${data.email}</li>
+                <li class="list-group-item">ID: ${data.id}</li>
+                <li class="list-group-item">Location: ${data.location}</li>
+                <li class="list-group-item">Name: Dina Ciorba</li>
+              </ul>
+            `;
+            document.getElementById('linkedin_info').innerHTML = linkedin_info2;
+          })
+          linkedin.get('/v2/me').then(data => {
+            console.log('self data:', data);
+          })
+        });
+      })
+
+        $('#twitter-button').on('click', function() {
+            	OAuth.initialize('{API_KEY}');
+              OAuth.popup('twitter').then(twitter => {
+                console.log('twitter:', twitter);
+                twitter.me().then(data => {
+                  console.log('data:', data);
+                  let twitter_info2 = `
+                    <h3>${data.name}</h3>
+                    <ul class="list-group">
+                      <li class="list-group-item">Avatar: ${data.avatar}</li>
+                      <li class="list-group-item">Language: ${data.language}</li>
+                      <li class="list-group-item">Email: ${data.email}</li>
+                      <li class="list-group-item">ID: ${data.id}</li>
+                      <li class="list-group-item">Name: ${data.name}</li>
+                      <li class="list-group-item">Alias: ${data.alias}</li>
+                      <li class="list-group-item">URL: ${data.url}</li>
+                    </ul>
+                  `;
+                  document.getElementById('twitter_info').innerHTML = twitter_info2;
+            	  });
+                twitter.get('/1.1/account/verify_credentials.json?include_email=true').then(data => {
+                  console.log('self data:', data);
+            	  })
+            	});
+        })
+
+    </script>
+
+     <div class="container">
+      <div id="profile"></div>
+      <div id="feed"></div>
+      <div id="google_profile2"></div>
+      <div id="github_info"></div>
+      <div id="linkedin_info"></div>
+      <div id="twitter_info"></div>
+    </div>
+  </body>
+</html>
