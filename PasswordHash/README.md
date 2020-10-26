@@ -1,0 +1,1 @@
+PasswordHash - console desktop application which represent a login simulation. The user's password is saved in a txt file after being encrypted using hashing and salting. If user introduces the right password - he receives a welcome message (Login successfull), otherwise gets an error message (Login failed.).
