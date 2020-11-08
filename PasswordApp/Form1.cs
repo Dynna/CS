@@ -1,6 +1,9 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Net.Mail;
+using System.Security.Cryptography;
+using System.Text;
 using System.Windows.Forms;
 
 namespace PasswordApp
@@ -12,7 +15,7 @@ namespace PasswordApp
             InitializeComponent();
         }
 
-        // Each password is 8 characters long
+        // Each code is 8 characters long
         public string password = PasswordGenerator.CreatePassword(8);
 
         // When click send button, the application is shipping a valid password to the user through e-mail
@@ -31,11 +34,11 @@ namespace PasswordApp
                 msg.To.Add(emailBox.Text);
                 var eMailValidator = new MailAddress(emailBox.Text);
                 msg.From = new MailAddress("application.test122@gmail.com");
-                msg.Subject = "Your password for APP";
-                msg.Body = "This is your unique password to access application: " + password;
+                msg.Subject = "Your confirmation code for APP";
+                msg.Body = "This is your confirmation code to complete registration: " + password;
            
                 client.Send(msg);
-                MessageBox.Show("Password sent successfully! Check your e-mail within 1 minute.");
+                MessageBox.Show("Confirmation code sent successfully! Check your e-mail within 1 minute.");
             }
             catch (Exception ex)
             {
@@ -66,11 +69,18 @@ namespace PasswordApp
             }
             else if (passwordBox.Text == password)
             {
-                MessageBox.Show("Welcome, friend! 🙂 Thank you for joining #ApplicationTest.");
+                TextWriter txt = new StreamWriter(@"C:\Users\User\source\repos\CS\PasswordApp\user_info.txt");
+                txt.WriteLine("Full Name: " + fullName.Text);
+                txt.WriteLine("Date of birth: " + dateOfBirth.Text);
+                txt.WriteLine("Email: " + emailBox.Text);
+                txt.WriteLine("Password: " + Encrypt(passBox.Text));
+                txt.Close();
+                MessageBox.Show("Welcome, " + fullName.Text + "! 🙂 Your registration is complete. Thank you for joining #ApplicationTest.");
+
             }
             else
             {
-                MessageBox.Show("Wrong password! Try again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Wrong confirmation code! Try again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         } 
 
@@ -93,6 +103,7 @@ namespace PasswordApp
         {
             this.ActiveControl = emailBox;
             passwordBox.UseSystemPasswordChar = true;
+            passBox.UseSystemPasswordChar = true;
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -104,6 +115,45 @@ namespace PasswordApp
             else
             {
                 passwordBox.UseSystemPasswordChar = true;
+            }
+        }
+
+        private void fullName_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        static string Encrypt(string clearText)
+        {
+            string EncryptionKey = "MAKV2SPBNI99212";
+            byte[] clearBytes = Encoding.Unicode.GetBytes(clearText);
+            using (Aes encryptor = Aes.Create())
+            {
+                Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(EncryptionKey, new byte[] { 0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76 });
+                encryptor.Key = pdb.GetBytes(32);
+                encryptor.IV = pdb.GetBytes(16);
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    using (CryptoStream cs = new CryptoStream(ms, encryptor.CreateEncryptor(), CryptoStreamMode.Write))
+                    {
+                        cs.Write(clearBytes, 0, clearBytes.Length);
+                        cs.Close();
+                    }
+                    clearText = Convert.ToBase64String(ms.ToArray());
+                }
+            }
+            return clearText;
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox2.Checked)
+            {
+                passBox.UseSystemPasswordChar = false;
+            }
+            else
+            {
+                passBox.UseSystemPasswordChar = true;
             }
         }
     } 
