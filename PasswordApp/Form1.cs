@@ -18,7 +18,7 @@ namespace PasswordApp
         // Each code is 8 characters long
         public string code = CodeGenerator.CreateCode(8);
 
-        // When click send button, the application is shipping a valid password to the user through e-mail
+        // When click send button, the application is shipping a confirmation code to the user through e-mail
         private void send_button_Click(object sender, EventArgs e)
         {
             try
