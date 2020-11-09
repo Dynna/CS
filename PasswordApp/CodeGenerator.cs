@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace PasswordApp
 {
-    class PasswordGenerator
+    class CodeGenerator
     {
         // Function that generates random password which might consist of Uppercase/Lowercase characters and/or Digits
-        public static string CreatePassword(int length)
+        public static string CreateCode(int length)
         {
             const string valid = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
             StringBuilder result = new StringBuilder();

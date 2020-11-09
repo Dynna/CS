@@ -16,7 +16,7 @@ namespace PasswordApp
         }
 
         // Each code is 8 characters long
-        public string password = PasswordGenerator.CreatePassword(8);
+        public string code = CodeGenerator.CreateCode(8);
 
         // When click send button, the application is shipping a valid password to the user through e-mail
         private void send_button_Click(object sender, EventArgs e)
@@ -35,7 +35,7 @@ namespace PasswordApp
                 var eMailValidator = new MailAddress(emailBox.Text);
                 msg.From = new MailAddress("application.test122@gmail.com");
                 msg.Subject = "Your confirmation code for APP";
-                msg.Body = "This is your confirmation code to complete registration: " + password;
+                msg.Body = "This is your confirmation code to complete registration: " + code;
            
                 client.Send(msg);
                 MessageBox.Show("Confirmation code sent successfully! Check your e-mail within 1 minute.");
@@ -59,7 +59,7 @@ namespace PasswordApp
             } */
         }
 
-        // When click enter button, the application processes the password and shows welcome message only if it's correct, else error message
+        // When click enter button, the application processes the confirmation code and shows welcome message only if it's correct, else error message
         private void enter_button_Click(object sender, EventArgs e)
         {
 
@@ -67,7 +67,7 @@ namespace PasswordApp
             {
                 MessageBox.Show("Please enter password!");
             }
-            else if (passwordBox.Text == password)
+            else if (passwordBox.Text == code)
             {
                 TextWriter txt = new StreamWriter(@"C:\Users\User\source\repos\CS\PasswordApp\user_info.txt");
                 txt.WriteLine("Full Name: " + fullName.Text);
