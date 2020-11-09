@@ -29,7 +29,7 @@ namespace PasswordApp
                 client.DeliveryMethod = SmtpDeliveryMethod.Network;
                 client.UseDefaultCredentials = false;
                 // Mail service credentials which can be stored in a .config file
-                client.Credentials = new NetworkCredential("application.test122@gmail.com", "airplane000");
+                client.Credentials = new NetworkCredential("application.test122@gmail.com", "{PASSWORD}");
                 MailMessage msg = new MailMessage();
                 msg.To.Add(emailBox.Text);
                 var eMailValidator = new MailAddress(emailBox.Text);
