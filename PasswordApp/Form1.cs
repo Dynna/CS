@@ -18,7 +18,7 @@ namespace PasswordApp
         // Each code is 8 characters long
         public string code = CodeGenerator.CreateCode(8);
 
-        // When click send button, the application is shipping a valid password to the user through e-mail
+        // When click send button, the application is shipping a confirmation code to the user through e-mail
         private void send_button_Click(object sender, EventArgs e)
         {
             try
@@ -29,7 +29,7 @@ namespace PasswordApp
                 client.DeliveryMethod = SmtpDeliveryMethod.Network;
                 client.UseDefaultCredentials = false;
                 // Mail service credentials which can be stored in a .config file
-                client.Credentials = new NetworkCredential("application.test122@gmail.com", "airplane000");
+                client.Credentials = new NetworkCredential("application.test122@gmail.com", "{PASSWORD}");
                 MailMessage msg = new MailMessage();
                 msg.To.Add(emailBox.Text);
                 var eMailValidator = new MailAddress(emailBox.Text);
