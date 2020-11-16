@@ -12,7 +12,7 @@
         <div id="login-row" class="row justify-content-center align-items-center">
             <div id="login-column" class="col-md-6">
                 <div class="box">
-                    <h3 style="margin-left: 280px; margin-bottom: 50px;">Login </h3>
+                    <h3 style="margin-left: 213px; margin-bottom: 50px;">Anti CSRF Login </h3>
                         <form class="form" action="result.php" method="post">
                             <div class="form-group">
                                 <label for="username" class="text-blue">Username:</label><br>

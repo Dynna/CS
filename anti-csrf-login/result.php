@@ -56,7 +56,7 @@ if(isset($_POST['username'],$_POST['password'])){
 					        </div>
                             <div class="form-group">
                                 <label for="username" class="text-blue">
-                                <input type="submit" name="show_token_info" style="margin-left: 60px;"  class="btn btn-info btn-md" value="show_token_info">
+                                <input type="submit" name="show_token_info" style="margin-left: 60px;"  class="btn btn-info btn-md" value="show token info">
                             </div>
                       </form>
                     </div>
