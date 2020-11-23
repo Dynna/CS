@@ -1,6 +1,6 @@
 ## CSRF anti attack login based on double submit cookie pattern.
 
-A GUI application that perform email confirmation for registration a new user.
+A WEB application that implement CSRF protection on the user authentication.
 
 ## Table of Contents
 * [General info](#general-info)
