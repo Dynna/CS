@@ -4,7 +4,7 @@ A WEB application that implements CSRF protection on the user authentication.
 
 ## Table of Contents
 * [General info](#general-info)
-* [Double Submit Cookie Pattern - How it works](#double-submit-cookie-pattern-how-it-works)
+* [Double Submit Cookie Pattern - How it works](#double-submit-cookie-pattern---how-it-works)
 * [Technologies](#technologies)
 * [Setup](#setup)
 ## General info
